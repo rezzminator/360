@@ -1,6 +1,8 @@
 ---
 name: 360
-description: "360° exhaustive multi-angle analysis. Systematically generates ALL angles on a subject — questions, risks, edge cases, blind spots — organized by dimension. Two domains: 'test' (for QA/code) and 'inquiry' (for requirements/designs/proposals). The consumer decides what to act on — 360° just ensures nothing gets skipped."
+version: "1.1.0"
+repo: "https://github.com/mreza0100/360"
+description: "360° exhaustive multi-angle analysis. Systematically generates ALL angles on a subject — questions, risks, edge cases, blind spots — organized by dimension. Two domains: 'test' (for QA/code) and 'inquiry' (for requirements/designs/proposals). Triggered by '360 <subject>', 'three-sixty', or referenced by agents at key analysis moments. The consumer decides what to act on — 360° just ensures nothing gets skipped."
 ---
 
 # 360° — Exhaustive Multi-Angle Analysis
@@ -9,7 +11,7 @@ description: "360° exhaustive multi-angle analysis. Systematically generates AL
 
 This is a **thinking protocol**, not a task runner. It produces an exhaustive list of angles on a subject, organized by dimension. No ranking, no filtering — that's the caller's job. The protocol forces systematic coverage so that creative analysis doesn't accidentally skip entire categories.
 
-## When to use
+## When to load this skill
 
 **Standalone invocation** (user or agent calls it directly):
 - `360 <subject>` — the canonical trigger
@@ -24,10 +26,10 @@ This is a **thinking protocol**, not a task runner. It produces an exhaustive li
 - Product managers run the **inquiry** domain before feature reviews
 - Security auditors run the **test** domain before category scans
 
-Do NOT use for:
-- One-shot implementation ("fix X")
-- Research ("how does X work?")
-- Iterative goal-seeking
+Do NOT load for:
+- One-shot implementation ("fix X") — use a targeted fix workflow
+- Research ("how does X work?") — use a research skill (e.g., RR)
+- Iterative goal-seeking — use an iterative skill (e.g., RND)
 
 The key distinction: **360° produces questions and angles, not answers.** If you need answers, use a different skill on the 360° output.
 
@@ -141,10 +143,41 @@ The standalone output stays in the conversation — no file is written unless th
 
 ## Embedded invocation (agent integration)
 
-When an agent references the 360° protocol, the agent runs the protocol **internally as a thinking step** — it doesn't spawn a sub-agent or write a separate file. The agent:
+**360° MUST always run in a separate agent with a clean context.** An agent that already has opinions about the subject will unconsciously skip angles that don't fit its mental model — defeating the entire purpose of blind-spot detection. The calling agent spawns a fresh agent that receives ONLY the subject and domain, with zero prior analysis context.
 
-1. Mentally walks each dimension for the subject at hand
-2. Uses the resulting angle list to guide its actual work (test writing, question generation, etc.)
-3. The 360° output is implicit in the agent's work product — it doesn't appear as a separate artifact
+The calling agent MUST:
 
-This is a thinking tool, not a reporting tool. The value is in the systematic coverage, not in a formatted list.
+1. **Spawn a separate Agent** with `subagent_type: "general-purpose"` and a self-contained prompt
+2. **Include in the prompt:** the subject description, the domain (`test` or `inquiry`), and an instruction to read the 360° skill file and execute the protocol
+3. **Exclude from the prompt:** any analysis, opinions, findings, or context the calling agent has already developed — the 360° agent must approach the subject cold
+4. **Receive the angle list** back from the spawned agent and use it to guide subsequent work
+
+Prompt template for spawning:
+```
+Read the 360° skill file and execute the protocol.
+Subject: {one-sentence description of what's being analyzed}
+Domain: {test | inquiry}
+Output the full 360° angle list grouped by dimension.
+```
+
+The returned angle list feeds into the calling agent's work — it doesn't become a separate artifact unless the caller decides otherwise.
+
+---
+
+## Version & Updates
+
+**Current version:** 1.1.0
+**Repository:** https://github.com/mreza0100/360
+
+To check for updates, compare the `version` field in your installed SKILL.md frontmatter against the latest in the repository.
+
+**To update:**
+
+```bash
+cd /path/to/360-repo && git pull
+cp SKILL.md /your/project/.claude/skills/360/SKILL.md
+```
+
+**Changelog:**
+- **1.1.0** — Embedded invocation changed from internal thinking step to separate-agent spawning (prevents confirmation bias). Added trigger keywords to description. Added version tracking.
+- **1.0.0** — Initial release. Two domains (test/inquiry), standalone + embedded invocation.

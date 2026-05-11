@@ -1,5 +1,7 @@
 # 360°
 
+**Version:** 1.1.0 · **License:** MIT · **Repo:** [github.com/mreza0100/360](https://github.com/mreza0100/360)
+
 A Claude Code skill for exhaustive multi-angle analysis. Systematically generates ALL angles on a subject — questions, risks, edge cases, blind spots — organized by dimension.
 
 This is a **thinking protocol**, not a task runner. It produces a comprehensive list of angles, not answers. The consumer decides what to act on — 360° just ensures nothing gets skipped.
@@ -37,15 +39,16 @@ Then use it in Claude Code:
 
 ### Embedded in agents
 
-Agents can reference the protocol as a thinking step before their main work:
+For best results, agents should spawn 360° in a **separate agent** with a clean context. An agent that already has opinions about the subject will unconsciously skip angles — defeating the purpose. The calling agent passes only the subject and domain, with zero prior analysis:
 
 ```
-Before diving in, run the 360° protocol (test domain) from
-.claude/skills/360/SKILL.md against the subject. Walk every
-dimension internally as a thinking step.
+Agent({
+  description: "360° analysis of <subject>",
+  prompt: "Read the 360° skill file and execute the protocol.\nSubject: <description>\nDomain: test\nOutput the full 360° angle list grouped by dimension."
+})
 ```
 
-The 360° output is implicit in the agent's work — it guides the analysis without producing a separate artifact.
+The returned angle list feeds into the calling agent's work without becoming a separate artifact.
 
 ## Example output
 
@@ -73,6 +76,15 @@ The 360° output is implicit in the agent's work — it guides the analysis with
 **No filtering.** If an angle seems unlikely, include it anyway. The caller decides what matters. 360° is a coverage tool, not a prioritization tool.
 
 **Conscious N/A.** Skipping a dimension requires writing "N/A: reason." This prevents the most common failure mode — unconsciously skipping an entire category because nothing immediately comes to mind.
+
+## Updating
+
+Compare the `version` field in your installed `SKILL.md` frontmatter against the repo's latest:
+
+```bash
+cd /path/to/360-repo && git pull
+cp SKILL.md /your/project/.claude/skills/360/SKILL.md
+```
 
 ## License
 
