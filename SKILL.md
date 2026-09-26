@@ -1,7 +1,7 @@
 ---
 name: 360
 version: "1.1.0"
-repo: "https://github.com/mreza0100/360"
+repo: "https://github.com/rezzminator/360"
 description: "360° exhaustive multi-angle analysis. Systematically generates ALL angles on a subject — questions, risks, edge cases, blind spots — organized by dimension. Two domains: 'test' (for QA/code) and 'inquiry' (for requirements/designs/proposals). Triggered by '360 <subject>', 'three-sixty', or referenced by agents at key analysis moments. The consumer decides what to act on — 360° just ensures nothing gets skipped."
 ---
 
@@ -167,7 +167,7 @@ The returned angle list feeds into the calling agent's work — it doesn't becom
 ## Version & Updates
 
 **Current version:** 1.1.0
-**Repository:** https://github.com/mreza0100/360
+**Repository:** https://github.com/rezzminator/360
 
 To check for updates, compare the `version` field in your installed SKILL.md frontmatter against the latest in the repository.
 

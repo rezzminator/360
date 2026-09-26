@@ -1,6 +1,6 @@
 # 360°
 
-**Version:** 1.1.0 · **License:** MIT · **Repo:** [github.com/mreza0100/360](https://github.com/mreza0100/360)
+**Version:** 1.1.0 · **License:** MIT · **Repo:** [github.com/rezzminator/360](https://github.com/rezzminator/360)
 
 A Claude Code skill for exhaustive multi-angle analysis. Systematically generates ALL angles on a subject — questions, risks, edge cases, blind spots — organized by dimension.
 
